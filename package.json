@@ -1,0 +1,50 @@
+{
+  "name": "reports",
+  "version": "1.0.0",
+  "description": "Report generation worker process",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GlobalFishingWatch/pipe-reports.git"
+  },
+  "author": "Global Fishing Watch",
+  "bugs": {
+    "url": "https://github.com/GlobalFishingWatch/pipe-reports/issues"
+  },
+  "homepage": "https://github.com/GlobalFishingWatch/pipe-reports#readme",
+  "engines": {
+    "node": "~8"
+  },
+  "eslintConfig": {
+    "env": {
+      "es6": true,
+      "node": true
+    },
+    "extends": "eslint:recommended"
+  },
+  "main": "src/index.js",
+  "scripts": {
+    "start": "per-env",
+    "start:production": "node src/index.js",
+    "start:development": "nodemon --inspect -e json,js src/index.js",
+    "lint": "eslint src/**/*.js"
+  },
+  "dependencies": {
+    "csv-stringify": "^1.0.4",
+    "dot": "^1.0.3",
+    "fs-extra": "^1.0.0",
+    "@google-cloud/bigquery": "^0.9.6",
+    "@google-cloud/pubsub": "^0.13.1",
+    "@google-cloud/storage": "^1.2.0",
+    "lodash": "^4.17.2",
+    "moment": "^2.18.1",
+    "nodemailer": "^2.6.4",
+    "per-env": "^1.0.2",
+    "temp": "^0.8.3",
+    "winston": "^2.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^2.13.1",
+    "nodemon": "^1.9.2"
+  }
+}

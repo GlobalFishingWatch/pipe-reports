@@ -1,0 +1,12 @@
+version: '2'
+services:
+  dev:
+    image: gfw/pipe-reports
+    build: .
+    command: npm start
+    env_file: ./dev/env
+    volumes:
+      - "./dev:/opt/project/dev"
+      - "./src:/opt/project/src"
+    environment:
+      - NODE_ENV=development

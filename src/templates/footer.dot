@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0;
+        padding: 5px 2px;
+        font-size: 10px;
+        color: #fff;
+        background-color: #125f9b;
+      }
+
+      p {
+        margin-top: 5px
+        margin-bottom: 0;
+      }
+
+      .paginator {
+        font-weight: bold;
+      }
+
+      .center {
+        text-align: center;
+      }
+
+      .justify {
+        text-align: justify;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="center paginator">
+      #page / #numPages
+    </p>
+
+    <p class="justify">
+      Global Fishing Watch is the product of a partnership between Oceana,
+      SkyTruth and Google.
+    </p>
+
+    <p class="justify">
+      Global Fishing Watch analyzes Automatic Identification System (AIS) data
+      collected from vessels that our research has identified as known or
+      possible commercial fishing vessels, and applies a fishing detection
+      algorithm to determine “apparent fishing activity” based on changes in
+      vessel speed and direction. As AIS data varies in completeness, accuracy
+      and quality, it is possible that some fishing activity is not identified
+      as such by Global Fishing Watch; conversely, Global Fishing Watch may
+      show apparent fishing activity where fishing is not actually taking
+      place. For these reasons, Global Fishing Watch qualifies all designations
+      of vessel fishing activity, including synonyms of the term “fishing
+      activity,” such as “fishing” or “fishing effort,” as “apparent,” rather
+      than certain. Any/all Global Fishing Watch information about “apparent
+      fishing activity” should be considered an estimate and must be relied
+      upon solely at your own risk.
+    </p>
+
+    <p class="center">
+      <img width="332" height="30" src="file://{{= it.paths.image('partners.svg')}}">
+    </p>
+  </body>
+</html>

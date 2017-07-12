@@ -1,0 +1,9 @@
+node_modules/
+client
+data/directory.json
+data/sources.json
+data/permissions.json
+dev/
+*~
+src/templates/reports/Logos-eps-converted-to.pdf
+src/templates/reports/gfw_logo-eps-converted-to.pdf

@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <style>
+      body {
+        color: #333;
+        font-size: 10px;
+        margin: 0;
+        padding: 0;
+      }
+
+      img.cache {
+        display: none;
+      }
+
+      table {
+        background-color: #fff;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        border-collapse: collapse;
+        border: 1px solid #767777;
+        font-size: 10px;
+      }
+
+      tr {
+        border: 1px solid #767777;
+      }
+
+      td {
+        padding: 2px;
+        border: 1px solid #767777;
+        font-size: 10px;
+      }
+
+      .table-header {
+        font-size: 10px;
+        font-weight: bold;
+      }
+
+      .left {
+        text-align: left;
+      }
+
+      .right {
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Cache: We need to include this images, which are used in the header
+    and footer, inside the main body. In that way we make phantom cache the
+    image. If we don't do this, phantom will never request resources from the
+    header and footer, so the images won't load. -->
+    <img class="cache" src="file://{{= it.paths.image('gfw.svg')}}">
+    <img class="cache" src="file://{{= it.paths.image('partners.svg')}}">
+    <!-- End Cache -->
+    <table>
+      <tr>
+        <td class="table-header left">Vessel Name</td>
+        <td class="table-header left">Flag State</td>
+        <td class="table-header left">MMSI</td>
+        <td class="table-header left">IMO</td>
+        <td class="table-header left">Callsign</td>
+        <td class="table-header right">Days at Sea</td>
+        <td class="table-header right">Fishing Days</td>
+        <td class="table-header right">Earliest Detection</td>
+        <td class="table-header right">Latest Detection</td>
+      </tr>
+      {{~ it.data :item}}
+      <tr>
+        <td class="left">{{! item.vessel_shipname_shipname}}</td>
+        <td class="left">
+          {{? item.flagState.code}}
+          <img src="{{= it.paths.image('flags/' + item.flagState.code.toLowerCase() + '.png')}}">
+          {{?}}
+          {{! item.flagState.name }}
+        </td>
+        <td class="left">{{! item.all_records_mmsi}}</td>
+        <td class="left">{{! item.vessel_imo_imo}}</td>
+        <td class="left">{{! item.vessel_callsign_callsign}}</td>
+        <td class="right">{{! item.presence_days}}</td>
+        <td class="right">{{! item.fishing_days}}</td>
+        <td class="right">{{= it.format.datetimeScientific(item.all_records_earliest_detection.value)}}</td>
+        <td class="right">{{= it.format.datetimeScientific(item.all_records_latest_detection.value)}}</td>
+      </tr>
+      {{~}}
+    </table>
+  </body>
+</html>
