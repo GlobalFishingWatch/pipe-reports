@@ -4,7 +4,8 @@ const log = require('winston');
 
 module.exports = async ({onMessage, onError}) => {
   log.debug("Retrieving pubsub topic");
-  const topic = await pubsub.topic(config.pubsub.reports.topic).get({autoCreate: true});
+  const topicData = await pubsub.topic(config.pubsub.reports.topic).get({autoCreate: true});
+  const topic = topicData[0];
 
   log.debug("Pubsub topic ready, retrieving subscription");
   const subscriptionData = await topic.subscribe(config.pubsub.reports.subscription, {
