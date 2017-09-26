@@ -3,7 +3,6 @@ services:
   dev:
     image: gfw/pipe-reports
     build: .
-    command: npm start
     env_file: ./dev/env
     volumes:
       - "./dev:/opt/project/dev"

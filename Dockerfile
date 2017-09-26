@@ -14,3 +14,5 @@ RUN npm --unsafe-perm install
 # Setup the application code
 COPY src /opt/project/src
 
+ENTRYPOINT ["/usr/local/bin/npm"]
+CMD ["start"]
