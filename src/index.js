@@ -18,22 +18,25 @@ const onMessage = async ({message, subscription}) => {
     log.debug("Ack deadline extended");
   }, 5000);
 
-  log.debug("Generating report", message.data);
-  const report = await generateReport(message.data);
+  try {
+    log.debug("Generating report", message.data);
+    const report = await generateReport(message.data);
 
-  log.debug("Sending notifications", report)
-  const notificationResults = await sendNotification(report, message.data);
+    log.debug("Sending notifications", report)
+    const notificationResults = await sendNotification(report, message.data);
 
-  log.debug("Report generated, clearing message")
-  const ackResults = await message.ack();
+    log.debug("Report generated, clearing message")
+    const ackResults = await message.ack();
+  } catch (e) {
+    log.error("There was an error generating the report", message.data);
+  }
 
   log.debug("Clearing heartbeat");
   clearInterval(interval);
-
 };
 
 const onError = ({err, subscription}) => {
-  log.error("There was an error on the subscription object", err);
+  log.error("There was an error on the subscription", err);
   process.exit(1);
 };
 
