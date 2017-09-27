@@ -18,7 +18,7 @@ const onMessage = async ({message, subscription}) => {
     log.debug("Ack deadline extended");
   }, 5000);
 
-  log.debug("Generating sample report", message.data);
+  log.debug("Generating report", message.data);
   const report = await generateReport(message.data);
 
   log.debug("Sending notifications", report)
@@ -34,7 +34,7 @@ const onMessage = async ({message, subscription}) => {
 
 const onError = ({err, subscription}) => {
   log.error("There was an error on the subscription object", err);
-  exit(1);
+  process.exit(1);
 };
 
 subscription({onMessage, onError});
