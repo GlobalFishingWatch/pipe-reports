@@ -33,7 +33,7 @@ const midCodeConstraint = (request, connector = 'AND') => {
 module.exports = ({request, tables}) => `
 SELECT
   all_records.mmsi,
-  vessel_shipname.shipname,
+  vessel_vesselname.vesselname,
   vessel_imo.imo,
   vessel_callsign.callsign,
   SUM(fishing_status.been_there) AS presence_days,
@@ -160,18 +160,18 @@ ON
 LEFT JOIN (
   SELECT
     mmsi,
-    shipname,
+    vesselname,
     SUM(msg_count) AS freq
   FROM
     ${tables.vessels}
   WHERE
-    shipname IS NOT NULL
-    AND LTRIM(RTRIM(shipname)) <> ""
+    vesselname IS NOT NULL
+    AND LTRIM(RTRIM(vesselname)) <> ""
   GROUP BY
     mmsi,
-    shipname) AS vessel_shipname
+    vesselname) AS vessel_vesselname
 ON
-  all_records.mmsi = vessel_shipname.mmsi
+  all_records.mmsi = vessel_vesselname.mmsi
 LEFT JOIN (
   SELECT
     mmsi,
@@ -179,28 +179,28 @@ LEFT JOIN (
   FROM (
     SELECT
       mmsi,
-      shipname,
+      vesselname,
       SUM(msg_count) AS freq
     FROM
       ${tables.vessels}
     WHERE
-      shipname IS NOT NULL
-      AND LTRIM(RTRIM(shipname)) <> ""
+      vesselname IS NOT NULL
+      AND LTRIM(RTRIM(vesselname)) <> ""
     GROUP BY
       mmsi,
-      shipname)
+      vesselname)
   GROUP BY
-    mmsi) AS vessel_shipname_frequent
+    mmsi) AS vessel_vesselname_frequent
 ON
-  vessel_shipname.mmsi = vessel_shipname_frequent.mmsi
+  vessel_vesselname.mmsi = vessel_vesselname_frequent.mmsi
 
 WHERE
   (vessel_callsign.freq = vessel_callsign_frequent.max_freq OR vessel_callsign_frequent.max_freq is null)
   AND (vessel_imo.freq = vessel_imo_frequent.max_freq OR vessel_imo_frequent.max_freq is null)
-  AND (vessel_shipname.freq = vessel_shipname_frequent.max_freq OR vessel_shipname_frequent.max_freq is null)
+  AND (vessel_vesselname.freq = vessel_vesselname_frequent.max_freq OR vessel_vesselname_frequent.max_freq is null)
 GROUP BY
   all_records.mmsi,
-  vessel_shipname.shipname,
+  vessel_vesselname.vesselname,
   vessel_imo.imo,
   vessel_callsign.callsign,
   all_records.earliest_detection,

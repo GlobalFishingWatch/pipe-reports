@@ -20,7 +20,7 @@ const reportRecord2csvRow = request => item => [
   request.params.from,
   request.params.to,
   item.all_records_mmsi,
-  item.vessel_shipname_shipname,
+  item.vessel_vesselname_vesselname,
   item.vessel_imo_imo,
   item.vessel_callsign_callsign,
   item.presence_days,

@@ -29,6 +29,7 @@ const onMessage = async ({message, subscription}) => {
     const ackResults = await message.ack();
   } catch (e) {
     log.error("There was an error generating the report", message.data);
+    log.error(e);
   }
 
   log.debug("Clearing heartbeat");

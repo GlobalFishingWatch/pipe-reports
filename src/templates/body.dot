@@ -68,7 +68,7 @@
       </tr>
       {{~ it.data :item}}
       <tr>
-        <td class="left">{{! item.vessel_shipname_shipname}}</td>
+        <td class="left">{{! item.vessel_vesselname_vesselname}}</td>
         <td class="left">
           {{? item.flagState.code}}
           <img src="{{= it.paths.image('flags/' + item.flagState.code.toLowerCase() + '.png')}}">
