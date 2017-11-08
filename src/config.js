@@ -44,7 +44,6 @@ module.exports = {
       subscription: entry({
         key: 'PUBSUB_REPORTS_SUBSCRIPTION',
         doc: 'Name of the subscription to pull report requests from.',
-        defaults: { all: 'reports-pipeline' },
         required: true,
       }),
     },
