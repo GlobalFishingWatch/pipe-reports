@@ -33,6 +33,15 @@ module.exports = {
     }),
   },
 
+  apiServer: {
+    host: entry({
+      key: 'API_SERVER_HOST',
+      doc: 'Protocol, host and port where the server is exposed to clients.',
+      defaults: {development: 'http://localhost:8080', test: 'http://localhost:8080'},
+      required: true,
+    }),
+  },
+
   pubsub: {
     reports: {
       topic: entry({
