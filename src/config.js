@@ -55,6 +55,13 @@ module.exports = {
         doc: 'Name of the subscription to pull report requests from.',
         required: true,
       }),
+
+      retryCount: entry({
+        key: 'PUBSUB_RETRY_COUNT',
+        doc: 'How many times a failing report request should be reprocessed before discarding.',
+        defaults: {all: 3},
+        required: true,
+      })
     },
   },
 

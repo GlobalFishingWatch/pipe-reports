@@ -25,12 +25,22 @@ const onMessage = async ({message, subscription}) => {
     log.debug("Sending notifications", report)
     const notificationResults = await sendNotification(report, message.data);
 
-    log.debug("Report generated, clearing message")
-    const ackResults = await message.ack();
   } catch (e) {
     log.error("There was an error generating the report", message.data);
-    log.error(e);
+    log.error("Error", e);
+
+    const retryCount = message.data.retryCount || 0;
+    if (retryCount > config.pubsub.retryCount) {
+      log.error(`Message was retried more than ${config.pubsub.retryCount} times, discarding`, message.data);
+    } else {
+      log.error("Retrying message later", message.data);
+      message.data.retryCount = retryCount + 1;
+      subscription.retryLater(message.data);
+    }
   }
+
+  log.debug("Acknowledging message");
+  const ackResults = await message.ack();
 
   log.debug("Clearing heartbeat");
   clearInterval(interval);
@@ -41,4 +51,4 @@ const onError = ({err, subscription}) => {
   process.exit(1);
 };
 
-subscription({onMessage, onError});
+subscription.subscribe({onMessage, onError});
