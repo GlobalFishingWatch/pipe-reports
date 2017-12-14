@@ -1,5 +1,5 @@
 const config = require('./config');
-const subscription = require('./subscription');
+const messages = require('./subscription');
 const generateReport = require('./report');
 const sendNotification = require('./notification');
 const log = require('winston');
@@ -35,7 +35,7 @@ const onMessage = async ({message, subscription}) => {
     } else {
       log.error("Retrying message later", message.data);
       message.data.retryCount = retryCount + 1;
-      subscription.retryLater(message.data);
+      const result = await messages.retryLater(message.data);
     }
   }
 
@@ -51,4 +51,4 @@ const onError = ({err, subscription}) => {
   process.exit(1);
 };
 
-subscription.subscribe({onMessage, onError});
+messages.subscribe({onMessage, onError});
