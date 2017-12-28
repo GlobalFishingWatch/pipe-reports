@@ -11,9 +11,7 @@ const emailSubject = (request) => {
   const genericPrefix = config.emails.subjectPrefix;
 
   if (request.recurrency) {
-    const subscriptionId = encodeSubscriptionId(request.subscriptionId);
-    const subscriptionPrefix = subscriptionId.substring(0, 8).toLowerCase();
-
+    const subscriptionPrefix = request.subscriptionId[3];
     return `${genericPrefix}Your ${request.recurrency} report subscription has been processed (${subscriptionPrefix})`;
   }
 
@@ -33,10 +31,8 @@ const unsubscribeLink = (request) => {
     return "";
   }
 
-  const encodedSubscriptionId = new Buffer(JSON.stringify(request.subscriptionId)).toString("base64");
-
   return `
-You received this email because you subscribed to a ${request.recurrency} report on this area. To stop receiving these emails, navigate to ${config.apiServer.host}/v2/subscriptions/${encodedSubscriptionId}/cancel.
+You received this email because you subscribed to a ${request.recurrency} report on this area. To stop receiving these emails, navigate to ${config.apiServer.host}/v2/subscriptions/${encodeSubscriptionId(request.subscriptionId)}/cancel.
   `;
 };
 
