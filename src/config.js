@@ -3,6 +3,15 @@ const environment = process.env.NODE_ENV || 'development';
 module.exports = {
   environment: environment,
 
+  emails: {
+    subjectPrefix: entry({
+      key: 'EMAILS_SUBJECT_PREFIX',
+      doc: 'Optional prefix for the emails subjects',
+      defaults: {all: ''},
+      required: false,
+    }),
+  },
+
   storage: {
     tilesetsBucket: entry({
       key: 'STORAGE_TILESETS_BUCKET',
