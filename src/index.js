@@ -28,6 +28,7 @@ const onMessage = async ({message, subscription}) => {
   } catch (e) {
     log.error("There was an error generating the report", message.data);
     log.error("Error", e);
+    log.error(`Current report retry count is ${message.data.retryCount}, maximum retry count is ${config.pubsub.retryCount}`);
 
     const retryCount = message.data.retryCount || 0;
     if (retryCount > config.pubsub.retryCount) {
