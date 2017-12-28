@@ -1,13 +1,31 @@
 const email = require('./services/email');
 const config = require('./config');
 
+const encodeSubscriptionId = subscriptionId => {
+  const buffer = new Buffer(JSON.stringify(subscriptionId))
+  return buffer.toString("base64");
+};
+
+const emailSubject = (request) => {
+  const message = 'Your report has been processed';
+  const genericPrefix = config.emails.subjectPrefix;
+
+  if (request.recurrency) {
+    const subscriptionId = encodeSubscriptionId(request.subscriptionId);
+    const subscriptionPrefix = subscriptionId.substring(0, 8).toLowerCase();
+
+    return `${genericPrefix}Your ${request.recurrency} report subscription has been processed (${subscriptionPrefix})`;
+  }
+
+  return `${genericPrefix}Your report has been processed`;
+}
+
 const reportResultsMessage = (report) => {
   if (report.empty) {
     return "No vessels were found."
-  } else {
-    return `
-You can download the report from ${report.uploads.pdf}. The raw data can also be downloaded from ${report.uploads.csv}.`;
   }
+  return `
+You can download the report from ${report.uploads.pdf}. The raw data can also be downloaded from ${report.uploads.csv}.`;
 };
 
 const unsubscribeLink = (request) => {
@@ -31,7 +49,6 @@ You requested a fishing hours report with the following parameters:
   To: ${request.params.to}
 
 ${reportResultsMessage(report)}
-
 ${unsubscribeLink(request)}
   `;
 };
@@ -39,7 +56,7 @@ ${unsubscribeLink(request)}
 module.exports = (report, request) => {
   return email.sendMail({
     to: request.user.email,
-    subject: "Your report has been processed",
+    subject: emailSubject(request),
     text: emailBody(report, request),
   });
 };
