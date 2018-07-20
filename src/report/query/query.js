@@ -24,7 +24,7 @@ const midCodeConstraint = (request, connector = 'AND') => {
     return '';
   } else {
     const conditions = midCodes
-      .map(midCode => `STRING(mmsi) LIKE '${midCode}%'`)
+      .map(midCode => `STRING(real_mmsi) LIKE '${midCode}%'`)
       .join(' OR ');
     return `${connector} (${conditions})`;
   }
@@ -32,7 +32,7 @@ const midCodeConstraint = (request, connector = 'AND') => {
 
 module.exports = ({request, tables}) => `
 SELECT
-  all_records.mmsi,
+  all_records.real_mmsi,
   vessel_vesselname.vesselname,
   vessel_imo.imo,
   vessel_callsign.callsign,
@@ -43,7 +43,7 @@ SELECT
 
 FROM (
   SELECT
-    mmsi,
+    real_mmsi,
     MIN(timestamp) AS earliest_detection,
     MAX(timestamp) AS latest_detection
   FROM
@@ -52,15 +52,15 @@ FROM (
     regions IN (${regionValues(request)})
     AND timestamp BETWEEN TIMESTAMP('${request.params.from}')
     AND TIMESTAMP('${request.params.to}')
-    AND LENGTH(STRING(mmsi)) = 9
+    AND LENGTH(STRING(real_mmsi)) = 9
     ${midCodeConstraint(request, 'AND')}
   GROUP BY
-    mmsi,
+    real_mmsi,
     regions ) AS all_records
 
 LEFT JOIN (
   SELECT
-    mmsi,
+    real_mmsi,
     CASE WHEN SOME(score >= 0.5) THEN 1 ELSE 0 END AS been_fishing,
     1 AS been_there,
     DAY(timestamp) AS d,
@@ -73,17 +73,17 @@ LEFT JOIN (
     AND timestamp BETWEEN TIMESTAMP('${request.params.from}')
     AND TIMESTAMP('${request.params.to}')
   GROUP BY
-    mmsi,
+    real_mmsi,
     regions,
     d,
     m,
     y ) AS fishing_status
 ON
-  fishing_status.mmsi = all_records.mmsi
+  fishing_status.real_mmsi = all_records.real_mmsi
 
 LEFT JOIN (
   SELECT
-    mmsi,
+    real_mmsi,
     callsign,
     SUM(msg_count) AS freq
   FROM
@@ -93,17 +93,17 @@ LEFT JOIN (
     AND LTRIM(RTRIM(callsign)) <> ""
     AND LTRIM(RTRIM(callsign)) <> "0"
   GROUP BY
-    mmsi,
+    real_mmsi,
     callsign) AS vessel_callsign
 ON
-  all_records.mmsi = vessel_callsign.mmsi
+  all_records.real_mmsi = vessel_callsign.real_mmsi
 LEFT JOIN (
   SELECT
-    mmsi,
+    real_mmsi,
     MAX(freq) AS max_freq
   FROM (
     SELECT
-      mmsi,
+      real_mmsi,
       callsign,
       SUM(msg_count) AS freq
     FROM
@@ -113,16 +113,16 @@ LEFT JOIN (
       AND LTRIM(RTRIM(callsign)) <> ""
       AND LTRIM(RTRIM(callsign)) <> "0"
     GROUP BY
-      mmsi,
+      real_mmsi,
       callsign)
   GROUP BY
-    mmsi) AS vessel_callsign_frequent
+    real_mmsi) AS vessel_callsign_frequent
 ON
-  vessel_callsign.mmsi = vessel_callsign_frequent.mmsi
+  vessel_callsign.real_mmsi = vessel_callsign_frequent.real_mmsi
 
 LEFT JOIN (
   SELECT
-    mmsi,
+    real_mmsi,
     imo,
     SUM(msg_count) AS freq
   FROM
@@ -131,17 +131,17 @@ LEFT JOIN (
     imo IS NOT NULL
     AND imo > 0
   GROUP BY
-    mmsi,
+    real_mmsi,
     imo) AS vessel_imo
 ON
-  all_records.mmsi = vessel_imo.mmsi
+  all_records.real_mmsi = vessel_imo.real_mmsi
 LEFT JOIN (
   SELECT
-    mmsi,
+    real_mmsi,
     MAX(freq) AS max_freq
   FROM (
     SELECT
-      mmsi,
+      real_mmsi,
       imo,
       SUM(msg_count) AS freq
     FROM
@@ -150,16 +150,16 @@ LEFT JOIN (
       imo IS NOT NULL
       AND imo > 0
     GROUP BY
-      mmsi,
+      real_mmsi,
       imo)
   GROUP BY
-    mmsi) AS vessel_imo_frequent
+    real_mmsi) AS vessel_imo_frequent
 ON
-  vessel_imo.mmsi = vessel_imo_frequent.mmsi
+  vessel_imo.real_mmsi = vessel_imo_frequent.real_mmsi
 
 LEFT JOIN (
   SELECT
-    mmsi,
+    real_mmsi,
     vesselname,
     SUM(msg_count) AS freq
   FROM
@@ -168,17 +168,17 @@ LEFT JOIN (
     vesselname IS NOT NULL
     AND LTRIM(RTRIM(vesselname)) <> ""
   GROUP BY
-    mmsi,
+    real_mmsi,
     vesselname) AS vessel_vesselname
 ON
-  all_records.mmsi = vessel_vesselname.mmsi
+  all_records.real_mmsi = vessel_vesselname.real_mmsi
 LEFT JOIN (
   SELECT
-    mmsi,
+    real_mmsi,
     MAX(freq) AS max_freq
   FROM (
     SELECT
-      mmsi,
+      real_mmsi,
       vesselname,
       SUM(msg_count) AS freq
     FROM
@@ -187,19 +187,19 @@ LEFT JOIN (
       vesselname IS NOT NULL
       AND LTRIM(RTRIM(vesselname)) <> ""
     GROUP BY
-      mmsi,
+      real_mmsi,
       vesselname)
   GROUP BY
-    mmsi) AS vessel_vesselname_frequent
+    real_mmsi) AS vessel_vesselname_frequent
 ON
-  vessel_vesselname.mmsi = vessel_vesselname_frequent.mmsi
+  vessel_vesselname.real_mmsi = vessel_vesselname_frequent.real_mmsi
 
 WHERE
   (vessel_callsign.freq = vessel_callsign_frequent.max_freq OR vessel_callsign_frequent.max_freq is null)
   AND (vessel_imo.freq = vessel_imo_frequent.max_freq OR vessel_imo_frequent.max_freq is null)
   AND (vessel_vesselname.freq = vessel_vesselname_frequent.max_freq OR vessel_vesselname_frequent.max_freq is null)
 GROUP BY
-  all_records.mmsi,
+  all_records.real_mmsi,
   vessel_vesselname.vesselname,
   vessel_imo.imo,
   vessel_callsign.callsign,
@@ -208,6 +208,6 @@ GROUP BY
 HAVING
   fishing_days > 0
 ORDER BY
-  all_records.mmsi
+  all_records.real_mmsi
     `;
 
