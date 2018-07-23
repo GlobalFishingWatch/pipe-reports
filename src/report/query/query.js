@@ -199,7 +199,7 @@ WHERE
   AND (vessel_imo.freq = vessel_imo_frequent.max_freq OR vessel_imo_frequent.max_freq is null)
   AND (vessel_vesselname.freq = vessel_vesselname_frequent.max_freq OR vessel_vesselname_frequent.max_freq is null)
 GROUP BY
-  all_records.real_mmsi,
+  mmsi,
   vessel_vesselname.vesselname,
   vessel_imo.imo,
   vessel_callsign.callsign,

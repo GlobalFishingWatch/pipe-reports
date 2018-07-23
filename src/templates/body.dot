@@ -75,7 +75,7 @@
           {{?}}
           {{! item.flagState.name }}
         </td>
-        <td class="left">{{! item.all_records_mmsi}}</td>
+        <td class="left">{{! item.mmsi}}</td>
         <td class="left">{{! item.vessel_imo_imo}}</td>
         <td class="left">{{! item.vessel_callsign_callsign}}</td>
         <td class="right">{{! item.presence_days}}</td>

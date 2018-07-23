@@ -33,7 +33,7 @@ const readFile = util.promisify(fs.readFile);
 const buildTemplateContext = (data, request) => {
   return {
     data: data.map((item) => {
-      const code = countries.lookupByMMSI(item.all_records_mmsi);
+      const code = countries.lookupByMMSI(item.mmsi);
       if (code) {
         return Object.assign(item, {flagState: countries.lookupByCode(code)});
       } else {

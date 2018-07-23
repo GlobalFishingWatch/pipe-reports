@@ -19,7 +19,7 @@ const reportRecord2csvRow = request => item => [
   `Fishing Vessel Days in ${request.params.regions.map(region => region.name).join(', ')}`,
   request.params.from,
   request.params.to,
-  item.all_records_mmsi,
+  item.mmsi,
   item.vessel_vesselname_vesselname,
   item.vessel_imo_imo,
   item.vessel_callsign_callsign,
