@@ -208,6 +208,6 @@ GROUP BY
 HAVING
   fishing_days > 0
 ORDER BY
-  all_records.real_mmsi
+  mmsi
     `;
 
