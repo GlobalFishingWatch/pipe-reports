@@ -32,7 +32,7 @@ const midCodeConstraint = (request, connector = 'AND') => {
 
 module.exports = ({request, tables}) => `
 SELECT
-  all_records.real_mmsi,
+  all_records.real_mmsi AS mmsi,
   vessel_vesselname.vesselname,
   vessel_imo.imo,
   vessel_callsign.callsign,
